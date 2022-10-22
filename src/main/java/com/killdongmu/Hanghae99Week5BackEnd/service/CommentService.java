@@ -19,7 +19,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     public List<CommentListResponseDto> findCommentList() {
 
-        List<Comments> commentList = commentRepository.findAll();
+        List<Comments> commentList = commentRepository.findCommentsByOrderByCreatedAtDesc();
         List<CommentListResponseDto> responseComment = new ArrayList<>();
 
         for (Comments comment : commentList) {
@@ -58,7 +58,13 @@ public class CommentService {
     @Transactional
     public void updateComment(CommentRequestDto commentRequestDto, Long commentId) {
 
+        Comments comment = commentRepository.findById(commentId).orElseThrow((NullPointerException::new));
 
+        comment.updateComment(commentRequestDto.getComment());
+    }
 
+    public void deleteComment(Long commentId) {
+
+        commentRepository.deleteById(commentId);
     }
 }

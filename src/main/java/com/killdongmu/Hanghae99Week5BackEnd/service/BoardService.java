@@ -69,7 +69,8 @@ public class BoardService {
     @Transactional
     public void updateBoard(BoardRequestDto boardRequestDto, Long boardId) {
 
-        Boards board = new Boards();
+        // Boards board = boardRepository.findById(boardId).orElseThrow(() -> new NullPointerException());
+        Boards board = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
 
         board.updateBoard(boardRequestDto.getTitle(), boardRequestDto.getContent());
     }
