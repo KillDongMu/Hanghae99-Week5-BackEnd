@@ -1,4 +1,4 @@
 package com.killdongmu.Hanghae99Week5BackEnd.service;
 
-public class CommentsService {
+public class CommentService {
 }
