@@ -1,23 +1,17 @@
-package com.killdongmu.Hanghae99Week5BackEnd.dto.response;
+package com.killdongmu.Hanghae99Week5BackEnd.dto.request;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardListResponseDto {
+public class CommentRequestDto {
 
-    private Long board_id;
-
-    private String title;
-
-    private String content;
+    private String comment;
 
     private LocalDateTime createdAt;
 

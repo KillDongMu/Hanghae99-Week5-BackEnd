@@ -11,15 +11,14 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardListResponseDto {
+public class CommentResponseDto {
 
-    private Long board_id;
+    private Long comment_id;
 
-    private String title;
-
-    private String content;
+    private String comment;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
+
 }
