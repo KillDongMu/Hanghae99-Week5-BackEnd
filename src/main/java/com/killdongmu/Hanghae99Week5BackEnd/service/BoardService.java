@@ -4,8 +4,15 @@ import com.killdongmu.Hanghae99Week5BackEnd.dto.request.BoardRequestDto;
 import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardListResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Boards;
+import com.killdongmu.Hanghae99Week5BackEnd.entity.Comments;
+import com.killdongmu.Hanghae99Week5BackEnd.entity.Hearts;
+import com.killdongmu.Hanghae99Week5BackEnd.entity.Members;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.BoardRepository;
+import com.killdongmu.Hanghae99Week5BackEnd.repository.CommentRepository;
+import com.killdongmu.Hanghae99Week5BackEnd.repository.HeartRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,65 +25,94 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
 
-    public List<BoardListResponseDto> findBoardList() {
+    private final CommentRepository commentRepository;
 
-        List<Boards> boardList = boardRepository.findAllByOrderByCreatedAtDesc();
+    private final HeartRepository heartRepository;
 
-        List<BoardListResponseDto> responseBoardList = new ArrayList<>();
+    public ResponseEntity<?> findBoardList() {
 
-        for (Boards board : boardList) {
+        List<Boards> requestBoardList = boardRepository.findAllByOrderByCreatedAtDesc();
+
+        List<BoardListResponseDto> boardList = new ArrayList<>();
+
+        for (Boards board : requestBoardList) {
 
             BoardListResponseDto boardListResponseDto = BoardListResponseDto.builder()
-                    .board_id(board.getId())
+                    .board_id(board.getBoard_id())
                     .title(board.getTitle())
                     .content(board.getContent())
                     .createdAt(board.getCreatedAt())
                     .modifiedAt(board.getModifiedAt())
                     .build();
 
-            responseBoardList.add(boardListResponseDto);
+            boardList.add(boardListResponseDto);
         }
-
-        return responseBoardList;
+        return new ResponseEntity<>(boardList, HttpStatus.OK);
 
     }
 
-    public BoardResponseDto findBoard(Long boardId) {
+    public ResponseEntity<?> findBoard(Long boardId) {
 
-        Boards board = boardRepository.findById(boardId).orElseThrow();
+        Boards requestBoard = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
 
-        BoardResponseDto responseBoard = BoardResponseDto.builder()
-                .board_id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .createdAt(board.getCreatedAt())
-                .modifiedAt(board.getModifiedAt())
+        BoardResponseDto board = BoardResponseDto.builder()
+                .board_id(requestBoard.getBoard_id())
+                .title(requestBoard.getTitle())
+                .content(requestBoard.getContent())
+                .createdAt(requestBoard.getCreatedAt())
+                .modifiedAt(requestBoard.getModifiedAt())
                 .build();
 
-        return responseBoard;
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
-    public void createBoard(BoardRequestDto boardRequestDto) {
+    public ResponseEntity<?> createBoard(BoardRequestDto boardRequestDto, Members members) {
 
         Boards board = Boards.builder().
                 title(boardRequestDto.getTitle()).
                 content(boardRequestDto.getContent()).
+                member(members).
                 build();
 
         boardRepository.save(board);
+
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
     @Transactional
-    public void updateBoard(BoardRequestDto boardRequestDto, Long boardId) {
+    public ResponseEntity<?> updateBoard(BoardRequestDto boardRequestDto, Long boardId, Members members) {
 
         // Boards board = boardRepository.findById(boardId).orElseThrow(() -> new NullPointerException());
         Boards board = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
 
+        if(!board.getMember().getMember_id().equals(members.getMember_id()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         board.updateBoard(boardRequestDto.getTitle(), boardRequestDto.getContent());
+
+        return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
-    public void deleteBoard(Long boardId) {
+    public ResponseEntity<?> deleteBoard(Long boardId, Members members) {
+
+        // 게시글 삭제할 때 댓글, 좋아요 삭제
+        Boards board = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
+        List<Comments> commentList = commentRepository.findAllByBoard(board);
+        List<Hearts> heartList = heartRepository.findAllByBoard(board);
+
+        if(!board.getMember().getMember_id().equals(members.getMember_id()))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        if (commentList.size() > 0) {
+            commentRepository.deleteByBoard(board);
+        }
+
+        if (heartList.size() > 0) {
+            heartRepository.deleteByBoard(board);
+        }
 
         boardRepository.deleteById(boardId);
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

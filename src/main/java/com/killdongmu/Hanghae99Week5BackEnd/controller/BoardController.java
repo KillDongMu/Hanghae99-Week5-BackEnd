@@ -1,13 +1,12 @@
 package com.killdongmu.Hanghae99Week5BackEnd.controller;
 
 import com.killdongmu.Hanghae99Week5BackEnd.dto.request.BoardRequestDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardListResponseDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardResponseDto;
+import com.killdongmu.Hanghae99Week5BackEnd.security.MemberDetails;
 import com.killdongmu.Hanghae99Week5BackEnd.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,7 +16,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/boards")
-    public List<BoardListResponseDto> boardList(){
+    public ResponseEntity<?> boardList(){
 
         // 기존
         /*List<BoardListResponseDto> boardList = boardService.findBoardList();
@@ -27,25 +26,28 @@ public class BoardController {
     }
 
     @GetMapping("/boards/{board-id}")
-    public BoardResponseDto boardInfo(@PathVariable(name = "board-id") Long boardId){
+    public ResponseEntity<?> boardInfo(@PathVariable(name = "board-id") Long boardId){
 
         return boardService.findBoard(boardId);
 
     }
 
     @PostMapping("/boards/create")
-    public void createBoard(@RequestBody BoardRequestDto boardRequestDto){
-        boardService.createBoard(boardRequestDto);
+    public ResponseEntity<?> createBoard(@RequestBody BoardRequestDto boardRequestDto,
+                                         @AuthenticationPrincipal MemberDetails memberDetails){
+        return boardService.createBoard(boardRequestDto, memberDetails.getMember());
     }
 
     @PutMapping("/boards/update/{board-id}")
-    public void updateBoard(@RequestBody BoardRequestDto boardRequestDto,
-                            @PathVariable(name = "board-id") Long boardId) {
-        boardService.updateBoard(boardRequestDto, boardId);
+    public ResponseEntity<?> updateBoard(@RequestBody BoardRequestDto boardRequestDto,
+                            @PathVariable(name = "board-id") Long boardId,
+                            @AuthenticationPrincipal MemberDetails memberDetails) {
+        return boardService.updateBoard(boardRequestDto, boardId, memberDetails.getMember());
     }
 
     @DeleteMapping("/boards/delete/{board-id}")
-    public void deleteBoard(@PathVariable(name = "board-id") Long boardId) {
-        boardService.deleteBoard(boardId);
+    public ResponseEntity<?> deleteBoard(@PathVariable(name = "board-id") Long boardId,
+                                         @AuthenticationPrincipal MemberDetails memberDetails) {
+        return boardService.deleteBoard(boardId, memberDetails.getMember());
     }
 }

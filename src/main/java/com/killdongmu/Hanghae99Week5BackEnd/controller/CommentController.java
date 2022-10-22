@@ -1,13 +1,10 @@
 package com.killdongmu.Hanghae99Week5BackEnd.controller;
 
 import com.killdongmu.Hanghae99Week5BackEnd.dto.request.CommentRequestDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.CommentListResponseDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.CommentResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,28 +13,30 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @GetMapping("/comments")
-    public List<CommentListResponseDto> commentList() {
-        return commentService.findCommentList();
+    @GetMapping("/boards/{board-id}/comments")
+    public ResponseEntity<?> commentList(@PathVariable(name = "board-id") Long boardId) {
+        return commentService.findCommentList(boardId);
     }
 
-    @GetMapping("/comments/{comment-id}")
-    public CommentResponseDto commentInfo(@PathVariable(name = "comment-id") Long commentId) {
+    @GetMapping("/boards/comments/{comment-id}")
+    public ResponseEntity<?> commentInfo(@PathVariable(name = "comment-id") Long commentId) {
         return commentService.findComment(commentId);
     }
 
-    @PostMapping("/comments/create")
-    public void createComment(@RequestBody CommentRequestDto commentRequestDto) {
-        commentService.createComment(commentRequestDto);
+    @PostMapping("/boards/{board-id}/comments/create")
+    public ResponseEntity<?> createComment(@RequestBody CommentRequestDto commentRequestDto,
+                              @PathVariable(name = "board-id") Long boardId) {
+        return commentService.createComment(commentRequestDto, boardId);
     }
 
-    @PutMapping("/comments/update/{comment-id}")
-    public void updateComment(@RequestBody CommentRequestDto commentRequestDto, @PathVariable(name = "comment-id") Long commentId) {
-        commentService.updateComment(commentRequestDto, commentId);
+    @PutMapping("/boards/comments/update/{comment-id}")
+    public ResponseEntity<?> updateComment(@RequestBody CommentRequestDto commentRequestDto,
+                              @PathVariable(name = "comment-id") Long commentId) {
+        return commentService.updateComment(commentRequestDto, commentId);
     }
 
-    @DeleteMapping("/comments/delete/{comment-id}")
-    public void deleteComment(@PathVariable(name = "comment-id") Long commentId) {
-        commentService.deleteComment(commentId);
+    @DeleteMapping("/boards/comments/delete/{comment-id}")
+    public ResponseEntity<?> deleteComment(@PathVariable(name = "comment-id") Long commentId) {
+        return commentService.deleteComment(commentId);
     }
 }

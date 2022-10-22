@@ -4,8 +4,11 @@ import com.killdongmu.Hanghae99Week5BackEnd.dto.request.CommentRequestDto;
 import com.killdongmu.Hanghae99Week5BackEnd.dto.response.CommentListResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.dto.response.CommentResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Comments;
+import com.killdongmu.Hanghae99Week5BackEnd.repository.BoardRepository;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,55 +19,63 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentService {
 
+    private final BoardRepository boardRepository;
     private final CommentRepository commentRepository;
-    public List<CommentListResponseDto> findCommentList() {
+    public ResponseEntity<?> findCommentList(Long boardId) {
 
-        List<Comments> commentList = commentRepository.findCommentsByOrderByCreatedAtDesc();
-        List<CommentListResponseDto> responseComment = new ArrayList<>();
+        List<Comments> requestCommentList = commentRepository.findCommentsByBoardOrderByCreatedAtDesc(boardId);
+        List<CommentListResponseDto> commentList = new ArrayList<>();
 
-        for (Comments comment : commentList) {
+        for (Comments comment : requestCommentList) {
             CommentListResponseDto commentListResponseDto = CommentListResponseDto.builder().
                     comment(comment.getComment()).
                     build();
 
-            responseComment.add(commentListResponseDto);
+            commentList.add(commentListResponseDto);
         }
 
-        return responseComment;
+        return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 
-    public CommentResponseDto findComment(Long commentId) {
+    public ResponseEntity<?> findComment(Long commentId) {
 
-        Comments comment = commentRepository.findById(commentId).orElse(null);
+        Comments requestComment = commentRepository.findById(commentId).orElse(null);
 
-        CommentResponseDto responseComment = CommentResponseDto.builder().
-                comment(comment.getComment()).
-                createdAt(comment.getCreatedAt()).
-                modifiedAt(comment.getModifiedAt()).
+        CommentResponseDto comment = CommentResponseDto.builder().
+                comment(requestComment.getComment()).
+                createdAt(requestComment.getCreatedAt()).
+                modifiedAt(requestComment.getModifiedAt()).
                 build();
 
-        return responseComment;
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    public void createComment(CommentRequestDto commentRequestDto) {
+    public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long boardId) {
 
         Comments comment = Comments.builder().
                 comment(commentRequestDto.getComment()).
+                board(boardRepository.findById(boardId).orElseThrow(RuntimeException::new)).
                 build();
 
         commentRepository.save(comment);
+
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
     @Transactional
-    public void updateComment(CommentRequestDto commentRequestDto, Long commentId) {
+    public ResponseEntity<?> updateComment(CommentRequestDto commentRequestDto, Long commentId) {
 
         Comments comment = commentRepository.findById(commentId).orElseThrow((NullPointerException::new));
 
         comment.updateComment(commentRequestDto.getComment());
+
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    public void deleteComment(Long commentId) {
+    public ResponseEntity<?> deleteComment(Long commentId) {
 
         commentRepository.deleteById(commentId);
+
+        return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

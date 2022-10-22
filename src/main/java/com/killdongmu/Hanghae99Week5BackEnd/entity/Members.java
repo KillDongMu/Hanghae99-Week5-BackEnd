@@ -1,5 +1,8 @@
 package com.killdongmu.Hanghae99Week5BackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.killdongmu.Hanghae99Week5BackEnd.util.Authority;
+import com.killdongmu.Hanghae99Week5BackEnd.util.Timestamped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +15,7 @@ import javax.persistence.*;
 @Entity(name = "member")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Members {
+public class Members extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
@@ -23,5 +26,15 @@ public class Members {
 
     @Column(name = "password")
     private String password;
+
+    @JsonIgnore
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
+
+    public Members(String username, String password, Authority authority) {
+        this.username = username;
+        this.password = password;
+        this.authority = authority;
+    }
 
 }
