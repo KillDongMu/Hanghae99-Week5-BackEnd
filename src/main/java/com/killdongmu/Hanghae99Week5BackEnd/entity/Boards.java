@@ -27,12 +27,12 @@ public class Boards extends Timestamped {
     @Column(nullable = false)
     private String content;
 
-    public Boards(BoardRequestDto boardRequestDto){
-        this.title  = boardRequestDto.getTitle();
+    public Boards(BoardRequestDto boardRequestDto) {
+        this.title = boardRequestDto.getTitle();
         this.content = boardRequestDto.getContent();
     }
 
-    public void boardUpdate(BoardRequestDto boardRequestDto){
+    public void boardUpdate(BoardRequestDto boardRequestDto) {
         this.title = boardRequestDto.getTitle() != null ? boardRequestDto.getTitle() : this.title;
         this.content = boardRequestDto.getContent() != null ? boardRequestDto.getContent() : this.content;
     }
