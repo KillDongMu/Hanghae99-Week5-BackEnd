@@ -1,9 +1,9 @@
 package com.killdongmu.Hanghae99Week5BackEnd.service;
 
 import com.killdongmu.Hanghae99Week5BackEnd.dto.request.CommentRequestDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.CommentListResponseDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.CommentResponseDto;
+import com.killdongmu.Hanghae99Week5BackEnd.entity.Boards;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Comments;
+import com.killdongmu.Hanghae99Week5BackEnd.entity.Members;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.BoardRepository;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,38 +22,26 @@ public class CommentService {
     private final CommentRepository commentRepository;
     public ResponseEntity<?> findCommentList(Long boardId) {
 
-        List<Comments> requestCommentList = commentRepository.findCommentsByBoardOrderByCreatedAtDesc(boardId);
-        List<CommentListResponseDto> commentList = new ArrayList<>();
+        Boards board = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
 
-        for (Comments comment : requestCommentList) {
-            CommentListResponseDto commentListResponseDto = CommentListResponseDto.builder().
-                    comment(comment.getComment()).
-                    build();
-
-            commentList.add(commentListResponseDto);
-        }
+        List<Comments> commentList = commentRepository.findCommentsByBoardOrderByCreatedAtDesc(board);
 
         return new ResponseEntity<>(commentList, HttpStatus.OK);
     }
 
     public ResponseEntity<?> findComment(Long commentId) {
 
-        Comments requestComment = commentRepository.findById(commentId).orElse(null);
-
-        CommentResponseDto comment = CommentResponseDto.builder().
-                comment(requestComment.getComment()).
-                createdAt(requestComment.getCreatedAt()).
-                modifiedAt(requestComment.getModifiedAt()).
-                build();
+        Comments comment = commentRepository.findById(commentId).orElse(null);
 
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long boardId) {
+    public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long boardId, Members members) {
 
         Comments comment = Comments.builder().
                 comment(commentRequestDto.getComment()).
                 board(boardRepository.findById(boardId).orElseThrow(RuntimeException::new)).
+                member(members).
                 build();
 
         commentRepository.save(comment);
@@ -63,19 +50,27 @@ public class CommentService {
     }
 
     @Transactional
-    public ResponseEntity<?> updateComment(CommentRequestDto commentRequestDto, Long commentId) {
+    public ResponseEntity<?> updateComment(CommentRequestDto commentRequestDto, Long commentId, Members members) {
 
         Comments comment = commentRepository.findById(commentId).orElseThrow((NullPointerException::new));
+
+        if(!comment.getMember().getMember_id().equals(members.getMember_id()))
+            throw new RuntimeException("작성자와 로그인 사용자가 일치하지 않습니다.");
 
         comment.updateComment(commentRequestDto.getComment());
 
         return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> deleteComment(Long commentId) {
+    public ResponseEntity<?> deleteComment(Long commentId, Members members) {
+
+        Comments comment = commentRepository.findById(commentId).orElseThrow((NullPointerException::new));
+
+        if(!comment.getMember().getMember_id().equals(members.getMember_id()))
+            throw new RuntimeException("작성자와 로그인 사용자가 일치하지 않습니다.");
 
         commentRepository.deleteById(commentId);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
     }
 }

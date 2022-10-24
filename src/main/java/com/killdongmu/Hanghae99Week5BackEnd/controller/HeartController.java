@@ -16,9 +16,12 @@ public class HeartController {
 
     private final HeartService heartService;
 
-    @PostMapping("/auth/heart/{board-id}")
+    @PostMapping("/heart/{board-id}")
     public void clickHeart(@PathVariable("board-id") Long boardId,
                            @AuthenticationPrincipal MemberDetails memberDetails) {
+        System.out.println(boardId);
+        System.out.println(memberDetails);
+        System.out.println("in");
         heartService.clickHeart(boardId, memberDetails.getMember());
     }
 }

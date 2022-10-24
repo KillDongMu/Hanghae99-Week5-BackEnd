@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/boards")
 public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/boards")
+    @GetMapping("/list")
     public ResponseEntity<?> boardList(){
 
         // 기존
@@ -25,27 +25,27 @@ public class BoardController {
         return boardService.findBoardList();
     }
 
-    @GetMapping("/boards/{board-id}")
+    @GetMapping("/detail/{board-id}")
     public ResponseEntity<?> boardInfo(@PathVariable(name = "board-id") Long boardId){
 
         return boardService.findBoard(boardId);
 
     }
 
-    @PostMapping("/boards/create")
+    @PostMapping("/create")
     public ResponseEntity<?> createBoard(@RequestBody BoardRequestDto boardRequestDto,
                                          @AuthenticationPrincipal MemberDetails memberDetails){
         return boardService.createBoard(boardRequestDto, memberDetails.getMember());
     }
 
-    @PutMapping("/boards/update/{board-id}")
+    @PutMapping("/update/{board-id}")
     public ResponseEntity<?> updateBoard(@RequestBody BoardRequestDto boardRequestDto,
                             @PathVariable(name = "board-id") Long boardId,
                             @AuthenticationPrincipal MemberDetails memberDetails) {
         return boardService.updateBoard(boardRequestDto, boardId, memberDetails.getMember());
     }
 
-    @DeleteMapping("/boards/delete/{board-id}")
+    @DeleteMapping("/delete/{board-id}")
     public ResponseEntity<?> deleteBoard(@PathVariable(name = "board-id") Long boardId,
                                          @AuthenticationPrincipal MemberDetails memberDetails) {
         return boardService.deleteBoard(boardId, memberDetails.getMember());

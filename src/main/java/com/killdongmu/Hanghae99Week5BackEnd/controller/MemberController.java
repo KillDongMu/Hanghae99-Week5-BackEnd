@@ -21,17 +21,17 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = "application/json")
     public ResponseEntity<?> createMember(@RequestBody @Valid SignupRequestDto signupRequestDto) {
         return memberService.createMember(signupRequestDto);
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login", consumes = "application/json")
     public ResponseEntity<?> loginMember(@RequestBody @Valid LoginRequestDto loginRequestDto) {
         return memberService.loginMember(loginRequestDto);
     }
 
-    @PostMapping("/reissue")
+    @PostMapping(value = "/reissue", consumes = "application/json")
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         System.out.println(tokenRequestDto);
         return ResponseEntity.ok(memberService.reissue(tokenRequestDto));

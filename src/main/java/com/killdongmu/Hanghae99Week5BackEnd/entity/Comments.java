@@ -1,5 +1,6 @@
 package com.killdongmu.Hanghae99Week5BackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.killdongmu.Hanghae99Week5BackEnd.util.Timestamped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,13 @@ public class Comments extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
+    @JsonIgnore
     private Boards board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    @JsonIgnore
+    private Members member;
 
     public void updateComment(String comment) {
         this.comment = comment;
