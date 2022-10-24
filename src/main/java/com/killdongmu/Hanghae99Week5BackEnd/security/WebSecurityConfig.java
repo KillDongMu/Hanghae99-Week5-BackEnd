@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                 .antMatchers("/h2-console/**", "/favicon.ico");
     }
 
+
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {

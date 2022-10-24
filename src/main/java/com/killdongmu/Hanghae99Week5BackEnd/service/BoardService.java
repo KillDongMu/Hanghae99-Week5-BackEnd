@@ -1,8 +1,6 @@
 package com.killdongmu.Hanghae99Week5BackEnd.service;
 
 import com.killdongmu.Hanghae99Week5BackEnd.dto.request.BoardRequestDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardListResponseDto;
-import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Boards;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Comments;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Hearts;
