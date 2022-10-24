@@ -63,12 +63,18 @@ public class MemberService implements UserDetailsService {
     public ResponseEntity<?> createMember(SignupRequestDto signupRequestDto) {
 
         if(memberRepository.existsByUsername(signupRequestDto.getUsername())) {
-            throw new RuntimeException("이미 가입된 유저입니다");
+            throw new RuntimeException("이미 존재하는 아이디입니다");
         }
+
         if(!signupRequestDto.getPassword().equals(signupRequestDto.getPasswordConfirm())) {
             throw new RuntimeException("비밀번호와 비밀번호 확인이 일치하지 않습니다");
         }
-        Members member = new Members(signupRequestDto.getUsername(), passwordEncoder.encode(signupRequestDto.getPassword()), Authority.ROLE_USER);
+        Members member = new Members(
+                signupRequestDto.getUsername(),
+                passwordEncoder.encode(signupRequestDto.getPassword()),
+                signupRequestDto.getEmail(),
+                Authority.ROLE_USER
+        );
 
         return ResponseEntity.ok(memberRepository.save(member));
     }
@@ -79,11 +85,13 @@ public class MemberService implements UserDetailsService {
         // 받아온 걸로 Security 인증용 토큰 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginRequestDto.toAuthentication();
 
-        System.out.println(authenticationToken);
-
         // 검증
         // (Security Depth : SecurityContextHolder > Context > Authentication > UsernamePasswordAuthenticationToken > MemberDetails)
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        if(!memberRepository.existsByUsername(loginRequestDto.getUsername())){
+            throw new RuntimeException("존재하지 않는 아이디입니다.");
+        }
 
         Members member = memberRepository.findByUsername(loginRequestDto.getUsername()).orElseThrow(RuntimeException::new);
 

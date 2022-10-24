@@ -27,13 +27,17 @@ public class Members extends Timestamped {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "email")
+    private String email;
+
     @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    public Members(String username, String password, Authority authority) {
+    public Members(String username, String password, String email, Authority authority) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.authority = authority;
     }
 

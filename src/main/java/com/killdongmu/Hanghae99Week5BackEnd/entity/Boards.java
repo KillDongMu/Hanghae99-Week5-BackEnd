@@ -1,5 +1,6 @@
 package com.killdongmu.Hanghae99Week5BackEnd.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.killdongmu.Hanghae99Week5BackEnd.util.Timestamped;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +26,9 @@ public class Boards extends Timestamped {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
+    @JsonIgnore
     private Members member;
 
     public void updateBoard(String title, String content) {

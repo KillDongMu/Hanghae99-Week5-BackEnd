@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,37 +30,15 @@ public class BoardService {
 
     public ResponseEntity<?> findBoardList() {
 
-        List<Boards> requestBoardList = boardRepository.findAllByOrderByCreatedAtDesc();
+        List<Boards> boardList = boardRepository.findAllByOrderByCreatedAtDesc();
 
-        List<BoardListResponseDto> boardList = new ArrayList<>();
-
-        for (Boards board : requestBoardList) {
-
-            BoardListResponseDto boardListResponseDto = BoardListResponseDto.builder()
-                    .board_id(board.getBoard_id())
-                    .title(board.getTitle())
-                    .content(board.getContent())
-                    .createdAt(board.getCreatedAt())
-                    .modifiedAt(board.getModifiedAt())
-                    .build();
-
-            boardList.add(boardListResponseDto);
-        }
         return new ResponseEntity<>(boardList, HttpStatus.OK);
 
     }
 
     public ResponseEntity<?> findBoard(Long boardId) {
 
-        Boards requestBoard = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
-
-        BoardResponseDto board = BoardResponseDto.builder()
-                .board_id(requestBoard.getBoard_id())
-                .title(requestBoard.getTitle())
-                .content(requestBoard.getContent())
-                .createdAt(requestBoard.getCreatedAt())
-                .modifiedAt(requestBoard.getModifiedAt())
-                .build();
+        Boards board = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
 
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
@@ -95,7 +72,7 @@ public class BoardService {
 
     public ResponseEntity<?> deleteBoard(Long boardId, Members members) {
 
-        // 게시글 삭제할 때 댓글, 좋아요 삭제
+        // 게시글 삭제할 때 해당 게시글의 댓글, 좋아요 삭제
         Boards board = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
         List<Comments> commentList = commentRepository.findAllByBoard(board);
         List<Hearts> heartList = heartRepository.findAllByBoard(board);
@@ -113,6 +90,6 @@ public class BoardService {
 
         boardRepository.deleteById(boardId);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
