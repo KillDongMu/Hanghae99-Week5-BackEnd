@@ -114,8 +114,14 @@ public class MemberService implements UserDetailsService {
 
         // 규칙인 Authorization 필드 만들고 Jwt 토큰 value에 Bearer 붙이고, 위에서 생성한 토큰 삽입
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, JwtFilter.BEARER_PREFIX + tokenDto.getAccessToken());
-        httpHeaders.add("Refresh-Token", tokenDto.getRefreshToken());
+        httpHeaders.add("RefreshToken", tokenDto.getRefreshToken());
+        httpHeaders.add("username",member.getUsername());
 
+        System.out.println(httpHeaders.get(JwtFilter.AUTHORIZATION_HEADER));
+
+        System.out.println(httpHeaders.get("RefreshToken"));
+
+        System.out.println("login 성공");
         // 토큰 발급
         return new ResponseEntity<>(ResponseDto.success(member), httpHeaders, HttpStatus.OK);
     }
