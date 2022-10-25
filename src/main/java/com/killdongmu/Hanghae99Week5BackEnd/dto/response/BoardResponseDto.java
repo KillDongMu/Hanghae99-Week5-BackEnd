@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.List;
 
 @Getter
 @Builder
@@ -20,6 +20,8 @@ public class BoardResponseDto {
     private String title;
 
     private String content;
+
+    private List<Long> commentIdList;
 
     private List<String> commentList;
 

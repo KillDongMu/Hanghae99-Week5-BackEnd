@@ -15,7 +15,7 @@ public class BoardController {
 
     private final BoardService boardService;
 
-    @GetMapping("/list")
+    @GetMapping(value = "/list", produces = "application/json")
     public ResponseEntity<?> boardList(){
 
         // 기존
@@ -25,27 +25,27 @@ public class BoardController {
         return boardService.findBoardList();
     }
 
-    @GetMapping("/detail/{board-id}")
+    @GetMapping(value = "/detail/{board-id}", produces = "application/json")
     public ResponseEntity<?> boardInfo(@PathVariable(name = "board-id") Long boardId){
 
         return boardService.findBoard(boardId);
 
     }
 
-    @PostMapping("/create")
+    @PostMapping(value ="/create", consumes = "application/json")
     public ResponseEntity<?> createBoard(@RequestBody BoardRequestDto boardRequestDto,
                                          @AuthenticationPrincipal MemberDetails memberDetails){
         return boardService.createBoard(boardRequestDto, memberDetails.getMember());
     }
 
-    @PutMapping("/update/{board-id}")
+    @PutMapping(value ="/update/{board-id}", consumes = "application/json")
     public ResponseEntity<?> updateBoard(@RequestBody BoardRequestDto boardRequestDto,
                             @PathVariable(name = "board-id") Long boardId,
                             @AuthenticationPrincipal MemberDetails memberDetails) {
         return boardService.updateBoard(boardRequestDto, boardId, memberDetails.getMember());
     }
 
-    @DeleteMapping("/delete/{board-id}")
+    @DeleteMapping(value ="/delete/{board-id}", consumes = "application/json")
     public ResponseEntity<?> deleteBoard(@PathVariable(name = "board-id") Long boardId,
                                          @AuthenticationPrincipal MemberDetails memberDetails) {
         return boardService.deleteBoard(boardId, memberDetails.getMember());
