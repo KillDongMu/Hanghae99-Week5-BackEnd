@@ -17,19 +17,12 @@ public class BoardController {
 
     @GetMapping(value = "/list")
     public ResponseEntity<?> boardList(){
-
-        // 기존
-        /*List<BoardListResponseDto> boardList = boardService.findBoardList();
-
-        return boardList;*/
         return boardService.findBoardList();
     }
 
     @GetMapping(value = "/detail/{board-id}")
     public ResponseEntity<?> boardInfo(@PathVariable(name = "board-id") Long boardId){
-
         return boardService.findBoard(boardId);
-
     }
 
     @PostMapping(value ="/create")

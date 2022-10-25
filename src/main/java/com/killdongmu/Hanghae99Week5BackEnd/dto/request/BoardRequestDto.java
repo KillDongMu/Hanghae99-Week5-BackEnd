@@ -17,8 +17,4 @@ public class BoardRequestDto {
 
     @NotBlank(message = "게시글 내용을 입력해주세요.")
     private String content;
-
-//    private LocalDateTime createdAt;
-//
-//    private LocalDateTime modifiedAt;
 }

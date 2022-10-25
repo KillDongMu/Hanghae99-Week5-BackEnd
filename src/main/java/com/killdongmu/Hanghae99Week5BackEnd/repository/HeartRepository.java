@@ -13,8 +13,6 @@ public interface HeartRepository extends JpaRepository<Hearts, Long> {
 
     List<Hearts> findAllByMember(Members member);
 
-    List<Hearts> findAllByOrderByCreatedAtDesc();
-
     // 게시글 삭제시 좋아요 삭제
     void deleteByBoard(Boards board);
 

@@ -15,10 +15,11 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Boards extends Timestamped {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "board_id", nullable = false)
-    private Long board_id;
+    private Long boardId;
 
     @Column(name = "title", nullable = false)
     private String title;

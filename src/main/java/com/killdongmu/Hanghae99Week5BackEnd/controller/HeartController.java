@@ -3,7 +3,6 @@ package com.killdongmu.Hanghae99Week5BackEnd.controller;
 import com.killdongmu.Hanghae99Week5BackEnd.security.MemberDetails;
 import com.killdongmu.Hanghae99Week5BackEnd.service.HeartService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +16,6 @@ public class HeartController {
     @PostMapping(value = "/heart/{board-id}", consumes = "application/json")
     public void clickHeart(@PathVariable("board-id") Long boardId,
                            @AuthenticationPrincipal MemberDetails memberDetails) {
-        System.out.println(boardId);
-        System.out.println(memberDetails);
-        System.out.println("in");
         heartService.clickHeart(boardId, memberDetails.getMember());
     }
 

@@ -14,11 +14,15 @@ import java.util.List;
 @AllArgsConstructor
 public class MypageResponseDto {
 
+    private Long memberId;
 
     private String username;
-    private Long member_id;
+
     private String email;
+
     private List<String> writtenBoardList;
+
     private List<String> writtenCommentList;
+
     private List<String> heartList;
 }

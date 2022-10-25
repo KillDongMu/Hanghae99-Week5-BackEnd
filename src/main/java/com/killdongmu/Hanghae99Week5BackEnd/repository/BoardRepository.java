@@ -10,6 +10,5 @@ public interface BoardRepository extends JpaRepository<Boards, Long> {
 
      List<Boards> findAllByOrderByCreatedAtDesc();
 
-
      List<Boards> findAllByMember(Members member);
 }

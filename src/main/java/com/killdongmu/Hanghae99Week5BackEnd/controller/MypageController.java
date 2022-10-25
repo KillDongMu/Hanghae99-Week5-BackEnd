@@ -21,34 +21,7 @@ public class MypageController {
 
 
     @GetMapping("/{username}")
-    public ResponseEntity<?> findMemberInfo(@PathVariable String username ) {
-
+    public ResponseEntity<?> findMemberInfo(@PathVariable String username) {
         return mypageService.findMemberInfo(username);
     }
-
-//    @GetMapping("/{username}")
-//    public ResponseEntity<?> findMyBoardList() {
-//
-//        return mypageService.findMyBoardList();
-//
-//    }
-//
-//
-//    @GetMapping("/{username}")
-//    public ResponseEntity<?> findMyCommentList(Long boardId) {
-//
-//        return mypageService.findMyCommentList(boardId);
-//
-//    }
-//
-//    @GetMapping("/{username}")
-//    public ResponseEntity<?> findMyHeartedList(Long boardId) {
-//
-//        return mypageService.findMyHeartList(boardId);
-//    }
-
 }
-
-
-
-// /api/mypage      .. api/mypage/userid
