@@ -117,11 +117,6 @@ public class MemberService implements UserDetailsService {
         httpHeaders.add("RefreshToken", tokenDto.getRefreshToken());
         httpHeaders.add("username",member.getUsername());
 
-        System.out.println(httpHeaders.get(JwtFilter.AUTHORIZATION_HEADER));
-
-        System.out.println(httpHeaders.get("RefreshToken"));
-
-        System.out.println("login 성공");
         // 토큰 발급
         return new ResponseEntity<>(ResponseDto.success(member), httpHeaders, HttpStatus.OK);
     }

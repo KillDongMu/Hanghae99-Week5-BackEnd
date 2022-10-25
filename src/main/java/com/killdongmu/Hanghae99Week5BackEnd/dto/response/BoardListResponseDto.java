@@ -19,6 +19,12 @@ public class BoardListResponseDto {
 
     private String content;
 
+    private Long countComment;
+
+    private Long countHeart;
+
+    private String username;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;

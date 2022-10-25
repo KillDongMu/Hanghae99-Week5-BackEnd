@@ -21,4 +21,5 @@ public interface HeartRepository extends JpaRepository<Hearts, Long> {
     void deleteByBoardAndMember(Boards board, Members members);
 
 
+    Long countByBoard(Boards board);
 }
