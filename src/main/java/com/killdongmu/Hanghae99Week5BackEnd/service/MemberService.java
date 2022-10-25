@@ -62,6 +62,8 @@ public class MemberService implements UserDetailsService {
     @Transactional
     public ResponseEntity<?> createMember(SignupRequestDto signupRequestDto) {
 
+        System.out.println(signupRequestDto.getUsername());
+
         if(memberRepository.existsByUsername(signupRequestDto.getUsername())) {
             throw new RuntimeException("이미 존재하는 아이디입니다");
         }

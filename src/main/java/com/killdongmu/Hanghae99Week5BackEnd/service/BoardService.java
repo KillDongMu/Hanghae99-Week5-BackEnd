@@ -62,10 +62,12 @@ public class BoardService {
         Boards findBoard = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
         List<Comments> commentsList = commentRepository.findAllByBoard(findBoard);
 
+        List<Long> commentIdList = new ArrayList<>();
         List<String> commentList = new ArrayList<>();
         List<String> commentMemberList = new ArrayList<>();
 
         for (Comments comments : commentsList) {
+            commentIdList.add(comments.getComment_id());
             commentList.add(comments.getComment());
             commentMemberList.add(comments.getMember().getUsername());
         }
@@ -75,8 +77,11 @@ public class BoardService {
                 title(findBoard.getTitle()).
                 content(findBoard.getContent()).
                 username(findBoard.getMember().getUsername()).
+                commentIdList(commentIdList).
                 commentList(commentList).
                 commentMemberList(commentMemberList).
+                createdAt(findBoard.getCreatedAt()).
+                modifiedAt(findBoard.getModifiedAt()).
                 build();
 
         return new ResponseEntity<>(board, HttpStatus.OK);
