@@ -100,13 +100,14 @@ public class MemberService implements UserDetailsService {
 
         // refresh 토큰 db 저장
         RefreshToken refreshToken = RefreshToken.builder()
-                // Key 검증된 유저 이름
+        // Key 검증된 유저 이름
                 .key(authentication.getName())
-                // value 문자열로 된 리스레쉬 토큰
+        // value 문자열로 된 리스레쉬 토큰
                 .value(tokenDto.getRefreshToken())
                 .build();
 
         refreshTokenRepository.save(refreshToken);
+//        refreshTokenRepository.save(refreshToken);
         // refresh 토큰 db 저장 끝
 
         // 클라이언트 발급용 토큰 헤더에 삼입

@@ -5,10 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Members, Long> {
+public interface MypageRepository extends JpaRepository<Members, Long> {
 
     Optional<Members> findByUsername(String username);
     Optional<Members> findById(Long id);
-
-    boolean existsByUsername(String username);
 }

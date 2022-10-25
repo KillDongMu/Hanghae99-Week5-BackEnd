@@ -6,9 +6,12 @@ import com.killdongmu.Hanghae99Week5BackEnd.entity.Members;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.BoardRepository;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.HeartRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,5 +34,7 @@ public class HeartService {
             Hearts heart = new Hearts(member, board);
             heartRepository.save(heart);
         }
+
     }
+
 }
