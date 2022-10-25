@@ -1,6 +1,8 @@
 package com.killdongmu.Hanghae99Week5BackEnd.service;
 
 import com.killdongmu.Hanghae99Week5BackEnd.dto.request.BoardRequestDto;
+import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardListResponseDto;
+import com.killdongmu.Hanghae99Week5BackEnd.dto.response.BoardResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Boards;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Comments;
 import com.killdongmu.Hanghae99Week5BackEnd.entity.Hearts;
@@ -14,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -28,7 +31,27 @@ public class BoardService {
 
     public ResponseEntity<?> findBoardList() {
 
-        List<Boards> boardList = boardRepository.findAllByOrderByCreatedAtDesc();
+        List<Boards> findBoardList = boardRepository.findAllByOrderByCreatedAtDesc();
+
+        List<BoardListResponseDto> boardList = new ArrayList<>();
+
+        for (Boards board : findBoardList) {
+            Long countComment = commentRepository.countByBoard(board);
+            Long countHeart = heartRepository.countByBoard(board);
+
+            BoardListResponseDto boardListResponseDto = BoardListResponseDto.builder().
+                    board_id(board.getBoard_id()).
+                    title(board.getTitle()).
+                    content(board.getContent()).
+                    countComment(countComment).
+                    countHeart(countHeart).
+                    username(board.getMember().getUsername()).
+                    createdAt(board.getCreatedAt()).
+                    modifiedAt(board.getModifiedAt()).
+                    build();
+
+            boardList.add(boardListResponseDto);
+        }
 
         return new ResponseEntity<>(boardList, HttpStatus.OK);
 
@@ -36,7 +59,25 @@ public class BoardService {
 
     public ResponseEntity<?> findBoard(Long boardId) {
 
-        Boards board = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
+        Boards findBoard = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
+        List<Comments> commentsList = commentRepository.findAllByBoard(findBoard);
+
+        List<String> commentList = new ArrayList<>();
+        List<String> commentMemberList = new ArrayList<>();
+
+        for (Comments comments : commentsList) {
+            commentList.add(comments.getComment());
+            commentMemberList.add(comments.getMember().getUsername());
+        }
+
+        BoardResponseDto board = BoardResponseDto.builder().
+                board_id(findBoard.getBoard_id()).
+                title(findBoard.getTitle()).
+                content(findBoard.getContent()).
+                username(findBoard.getMember().getUsername()).
+                commentList(commentList).
+                commentMemberList(commentMemberList).
+                build();
 
         return new ResponseEntity<>(board, HttpStatus.OK);
     }

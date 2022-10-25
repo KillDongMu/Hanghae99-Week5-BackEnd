@@ -18,5 +18,5 @@ public interface CommentRepository extends JpaRepository<Comments, Long> {
 
     void deleteByBoard(Boards board);
 
-
+    Long countByBoard(Boards board);
 }
