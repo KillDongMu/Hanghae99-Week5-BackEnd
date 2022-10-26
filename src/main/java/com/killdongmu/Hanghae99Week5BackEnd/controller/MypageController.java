@@ -1,16 +1,13 @@
 package com.killdongmu.Hanghae99Week5BackEnd.controller;
 
 
-import com.killdongmu.Hanghae99Week5BackEnd.security.MemberDetails;
-import com.killdongmu.Hanghae99Week5BackEnd.service.BoardService;
-import com.killdongmu.Hanghae99Week5BackEnd.service.CommentService;
-import com.killdongmu.Hanghae99Week5BackEnd.service.MemberService;
 import com.killdongmu.Hanghae99Week5BackEnd.service.MypageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/mypage")

@@ -31,7 +31,6 @@ public class Comments extends Timestamped {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    @JsonIgnore
     private Members member;
 
     public void updateComment(String comment) {

@@ -11,11 +11,13 @@ import com.killdongmu.Hanghae99Week5BackEnd.repository.BoardRepository;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.CommentRepository;
 import com.killdongmu.Hanghae99Week5BackEnd.repository.HeartRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,11 +25,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
+    @Value("${cloud.aws.s3.dir}")
+    private String dir;
     private final BoardRepository boardRepository;
 
     private final CommentRepository commentRepository;
 
     private final HeartRepository heartRepository;
+
+    private final S3UploadService s3UploadService;
 
     public ResponseEntity<?> findBoardList() {
 
@@ -42,6 +48,7 @@ public class BoardService {
             BoardListResponseDto boardListResponseDto = BoardListResponseDto.builder().
                     boardId(board.getBoardId()).
                     title(board.getTitle()).
+                    file(board.getFile()).
                     content(board.getContent()).
                     countComment(countComment).
                     countHeart(countHeart).
@@ -75,6 +82,7 @@ public class BoardService {
         BoardResponseDto board = BoardResponseDto.builder().
                 board_id(findBoard.getBoardId()).
                 title(findBoard.getTitle()).
+                file(findBoard.getFile()).
                 content(findBoard.getContent()).
                 username(findBoard.getMember().getUsername()).
                 commentList(findBoard.getCommentList()).
@@ -85,10 +93,11 @@ public class BoardService {
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
-    public ResponseEntity<?> createBoard(BoardRequestDto boardRequestDto, Members members) {
+    public ResponseEntity<?> createBoard(BoardRequestDto boardRequestDto, Members members) throws IOException {
 
         Boards board = Boards.builder().
                 title(boardRequestDto.getTitle()).
+                file(s3UploadService.upload(boardRequestDto.getFile(), dir)).
                 content(boardRequestDto.getContent()).
                 member(members).
                 build();
@@ -112,6 +121,7 @@ public class BoardService {
         return new ResponseEntity<>(board, HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<?> deleteBoard(Long boardId, Members members) {
 
         // 게시글 삭제할 때 해당 게시글의 댓글, 좋아요 삭제
