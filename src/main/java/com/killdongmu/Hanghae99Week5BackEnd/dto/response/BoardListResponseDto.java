@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BoardListResponseDto {
 
-    private Long board_id;
+    private Long boardId;
 
     private String title;
 

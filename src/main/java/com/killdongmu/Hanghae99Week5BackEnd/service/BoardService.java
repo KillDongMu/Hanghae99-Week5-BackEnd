@@ -40,7 +40,7 @@ public class BoardService {
             Long countHeart = heartRepository.countByBoard(board);
 
             BoardListResponseDto boardListResponseDto = BoardListResponseDto.builder().
-                    board_id(board.getBoard_id()).
+                    boardId(board.getBoardId()).
                     title(board.getTitle()).
                     content(board.getContent()).
                     countComment(countComment).
@@ -60,26 +60,24 @@ public class BoardService {
     public ResponseEntity<?> findBoard(Long boardId) {
 
         Boards findBoard = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
-        List<Comments> commentsList = commentRepository.findAllByBoard(findBoard);
+/*        List<Comments> commentsList = commentRepository.findAllByBoard(findBoard);
 
         List<Long> commentIdList = new ArrayList<>();
         List<String> commentList = new ArrayList<>();
         List<String> commentMemberList = new ArrayList<>();
 
         for (Comments comments : commentsList) {
-            commentIdList.add(comments.getComment_id());
+            commentIdList.add(comments.getCommentId());
             commentList.add(comments.getComment());
             commentMemberList.add(comments.getMember().getUsername());
-        }
+        }*/
 
         BoardResponseDto board = BoardResponseDto.builder().
-                board_id(findBoard.getBoard_id()).
+                board_id(findBoard.getBoardId()).
                 title(findBoard.getTitle()).
                 content(findBoard.getContent()).
                 username(findBoard.getMember().getUsername()).
-                commentIdList(commentIdList).
-                commentList(commentList).
-                commentMemberList(commentMemberList).
+                commentList(findBoard.getCommentList()).
                 createdAt(findBoard.getCreatedAt()).
                 modifiedAt(findBoard.getModifiedAt()).
                 build();
@@ -106,7 +104,7 @@ public class BoardService {
         // Boards board = boardRepository.findById(boardId).orElseThrow(() -> new NullPointerException());
         Boards board = boardRepository.findById(boardId).orElseThrow(NullPointerException::new);
 
-        if(!board.getMember().getMember_id().equals(members.getMember_id()))
+        if(!board.getMember().getMemberId().equals(members.getMemberId()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         board.updateBoard(boardRequestDto.getTitle(), boardRequestDto.getContent());
@@ -121,7 +119,7 @@ public class BoardService {
         List<Comments> commentList = commentRepository.findAllByBoard(board);
         List<Hearts> heartList = heartRepository.findAllByBoard(board);
 
-        if(!board.getMember().getMember_id().equals(members.getMember_id()))
+        if(!board.getMember().getMemberId().equals(members.getMemberId()))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         if (commentList.size() > 0) {

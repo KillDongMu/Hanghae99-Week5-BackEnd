@@ -2,10 +2,7 @@ package com.killdongmu.Hanghae99Week5BackEnd.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-/*
-*
-* 상태 넘기는 게 entity 에 있어서.... 굳이 responseDto 쓸 필요가 없을듯!!!
-* */
+
 @Getter
 @AllArgsConstructor
 public class ResponseDto<T> {

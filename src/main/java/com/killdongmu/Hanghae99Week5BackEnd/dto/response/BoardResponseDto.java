@@ -1,6 +1,7 @@
 package com.killdongmu.Hanghae99Week5BackEnd.dto.response;
 
 
+import com.killdongmu.Hanghae99Week5BackEnd.entity.Comments;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,11 +23,7 @@ public class BoardResponseDto {
 
     private String content;
 
-    private List<Long> commentIdList;
-
-    private List<String> commentList;
-
-    private List<String> commentMemberList;
+    private List<Comments> commentList;
 
     private String username;
 
