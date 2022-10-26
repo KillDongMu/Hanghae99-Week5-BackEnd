@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
@@ -32,9 +34,11 @@ public class Boards extends Timestamped {
     @JsonIgnore
     private Members member;
 
+    @OneToMany(mappedBy = "board")
+    private List<Comments> commentList = new ArrayList<>();
+
     public void updateBoard(String title, String content) {
         this.title = title;
         this.content = content;
     }
-
 }
