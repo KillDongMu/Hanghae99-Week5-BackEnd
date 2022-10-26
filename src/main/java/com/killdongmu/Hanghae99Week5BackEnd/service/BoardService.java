@@ -67,25 +67,21 @@ public class BoardService {
     public ResponseEntity<?> findBoard(Long boardId) {
 
         Boards findBoard = boardRepository.findById(boardId).orElseThrow(RuntimeException::new);
-/*        List<Comments> commentsList = commentRepository.findAllByBoard(findBoard);
+        List<Hearts> heartList = heartRepository.findAllByBoard(findBoard);
 
-        List<Long> commentIdList = new ArrayList<>();
-        List<String> commentList = new ArrayList<>();
-        List<String> commentMemberList = new ArrayList<>();
+        List<String> heartedUsernameList = new ArrayList<>();
 
-        for (Comments comments : commentsList) {
-            commentIdList.add(comments.getCommentId());
-            commentList.add(comments.getComment());
-            commentMemberList.add(comments.getMember().getUsername());
-        }*/
+        for (Hearts hearts : heartList) {
+            heartedUsernameList.add(hearts.getMember().getUsername());
+        }
 
         BoardResponseDto board = BoardResponseDto.builder().
                 board_id(findBoard.getBoardId()).
                 title(findBoard.getTitle()).
-                file(findBoard.getFile()).
                 content(findBoard.getContent()).
                 username(findBoard.getMember().getUsername()).
                 commentList(findBoard.getCommentList()).
+                heartedUsernameList(heartedUsernameList).
                 createdAt(findBoard.getCreatedAt()).
                 modifiedAt(findBoard.getModifiedAt()).
                 build();
