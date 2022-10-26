@@ -27,6 +27,8 @@ public class BoardResponseDto {
 
     private String username;
 
+    private List<String> heartedUsernameList;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime modifiedAt;
