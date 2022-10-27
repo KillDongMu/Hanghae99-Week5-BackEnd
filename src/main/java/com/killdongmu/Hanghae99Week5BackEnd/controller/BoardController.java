@@ -25,7 +25,7 @@ public class BoardController {
 
     // 게시판 전체 페이징 조회 GET /boards/pager?page=3&size=10  + Board Total Count
     @GetMapping ("/list/pager")
-    public ResponseDto<?> getBoardPagerList(
+    public ResponseEntity<?> getBoardPagerList(
             @RequestParam("page") int page,
             @RequestParam("size") int size) {
         int pageTemp = page - 1;
