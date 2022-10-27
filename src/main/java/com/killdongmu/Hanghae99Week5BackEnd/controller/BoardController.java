@@ -1,6 +1,7 @@
 package com.killdongmu.Hanghae99Week5BackEnd.controller;
 
 import com.killdongmu.Hanghae99Week5BackEnd.dto.request.BoardRequestDto;
+import com.killdongmu.Hanghae99Week5BackEnd.dto.response.ResponseDto;
 import com.killdongmu.Hanghae99Week5BackEnd.security.MemberDetails;
 import com.killdongmu.Hanghae99Week5BackEnd.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,15 @@ public class BoardController {
     @GetMapping(value = "/list")
     public ResponseEntity<?> boardList(){
         return boardService.findBoardList();
+    }
+
+    // 게시판 전체 페이징 조회 GET /boards/pager?page=3&size=10  + Board Total Count
+    @GetMapping ("/list/pager")
+    public ResponseDto<?> getBoardPagerList(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size) {
+        int pageTemp = page - 1;
+        return boardService.findBoardPageList(pageTemp,size);
     }
 
     @GetMapping(value = "/detail/{board-id}")
