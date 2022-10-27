@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -69,10 +70,12 @@ public class BoardService {
 
     // 게시판 무한 스크롤로 불러오기
     @Transactional
-    public ResponseDto<?> findBoardPageList(int page, int size) {
+    public ResponseEntity<?> findBoardPageList(int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        return ResponseDto.success(boardRepository.findAllByOrderByBoardIdDesc(pageable));
+        Slice<Boards> boardList = boardRepository.findAllByOrderByBoardIdDesc(pageable);
+
+        return new ResponseEntity<>(boardList, HttpStatus.OK);
     }
 
     public ResponseEntity<?> findBoard(Long boardId) {
