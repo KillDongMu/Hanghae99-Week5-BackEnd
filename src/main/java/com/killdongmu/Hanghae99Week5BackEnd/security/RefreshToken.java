@@ -26,8 +26,9 @@ public class RefreshToken {
     }
 
     public RefreshToken updateValue(String refreshToken) {
+
         this.value = value;
-        // key값 그대로 value만 업데이트 한 값을 돌려줌
+
         return this;
     }
 }
