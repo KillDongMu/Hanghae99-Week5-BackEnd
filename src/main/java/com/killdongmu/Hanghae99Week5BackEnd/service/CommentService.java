@@ -42,6 +42,9 @@ public class CommentService {
 
     public ResponseEntity<?> createComment(CommentRequestDto commentRequestDto, Long boardId, Members members) {
 
+        if(!commentRequestDto.getComment().equals(""))
+            return new ResponseEntity<>("댓글을 입력해주세요.", HttpStatus.BAD_REQUEST);
+
         Comments comment = Comments.builder().
                 comment(commentRequestDto.getComment()).
                 board(boardRepository.findById(boardId).orElseThrow(RuntimeException::new)).
@@ -63,6 +66,9 @@ public class CommentService {
 
         if(!comment.getMember().getMemberId().equals(members.getMemberId()))
             return new ResponseEntity<>("작성자와 사용자가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+
+        if(!commentRequestDto.getComment().equals(""))
+            return new ResponseEntity<>("댓글을 입력해주세요.", HttpStatus.BAD_REQUEST);
 
         comment.updateComment(commentRequestDto.getComment());
 
