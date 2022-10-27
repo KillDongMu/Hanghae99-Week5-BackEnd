@@ -109,6 +109,9 @@ public class BoardService {
 
     public ResponseEntity<?> createBoard(BoardRequestDto boardRequestDto, Members members) throws IOException {
 
+        if(!boardRequestDto.getTitle().equals("") || !boardRequestDto.getContent().equals("") || boardRequestDto.getFile().isEmpty())
+            return new ResponseEntity<>("게시글의 모든 데이터는 필수로 입력해야 됩니다.", HttpStatus.BAD_REQUEST);
+
         Boards board = Boards.builder().
                 title(boardRequestDto.getTitle()).
                 file(s3UploadService.upload(boardRequestDto.getFile(), dir)).
@@ -128,6 +131,9 @@ public class BoardService {
         Boards board = boardRepository.findById(boardId).orElseThrow(
                 () -> new NullPointerException("게시글이 존재하지 않습니다.")
         );
+
+        if(!boardRequestDto.getTitle().equals("") || !boardRequestDto.getContent().equals("") || boardRequestDto.getFile().isEmpty())
+            return new ResponseEntity<>("게시글의 모든 데이터는 필수로 입력해야 됩니다.", HttpStatus.BAD_REQUEST);
 
         if(!board.getMember().getMemberId().equals(members.getMemberId()))
             return new ResponseEntity<>("작성자와 사용자가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
